@@ -34,9 +34,9 @@ public class DBUtils {
 		Connection conn = null;
 		//Cfg cfg = ConfigUtils.getCfg(CONFIG_FILE);
 		String driver = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://sh.jingsky.com:3306/ydhl?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8";
-		String username = "root";
-		String password = "sp111";
+		String url = "jdbc:mysql://139.129.129.128:3306/test";
+		String username = "dev";
+		String password = "Imwithop110.com";
 		String prefixList="";
 		if(StringUtils.isNotEmpty(prefixList)){
 			String[] strings=prefixList.split(",+");

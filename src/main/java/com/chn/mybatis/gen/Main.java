@@ -1,40 +1,54 @@
 package com.chn.mybatis.gen;
 
-import com.chn.mybatis.gen.def.TableMetadata;
-import com.chn.mybatis.gen.trans.TableTrans;
-import com.chn.mybatis.gen.utils.DBUtils;
-import org.apache.commons.io.FileUtils;
-import org.bee.tl.core.GroupTemplate;
-import org.bee.tl.core.Template;
-
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.io.FileUtils;
+import org.bee.tl.core.GroupTemplate;
+import org.bee.tl.core.Template;
+import com.chn.mybatis.gen.trans.TableTrans;
+import com.chn.mybatis.gen.utils.DBUtils;
 
 public class Main {
 
 	private static final String EOL = System.getProperty("line.separator");
-	public static final String ROOT_FILE_PATH = Main.class.getResource("/").getPath().replace("%20", " ");
+	public static final String ROOT_FILE_PATH = Main.class.getResource("/").getPath().replace("%20", " ");//读取文件的路径
+	public static final String GEN_FILE_PATH = "/F:/workspace-new/mapper/src/main/java/com/ww/";//生成文件的路径
 	public static final String PACKAGE_PATH = ROOT_FILE_PATH + "com/chn/mybatis/gen/tpl";
-	public static final File GEN_FOLDER = new File(ROOT_FILE_PATH + "../gen");
-	public static final String GEN_PACKAGE = "com.jingsky.study";
+	public static final File GEN_FOLDER = new File(GEN_FILE_PATH);
+	public static final String GEN_FOLDER_MAPPER_XML_PATH = "/F:/workspace-new/mapper/src/main/resources/";
+	public static final File GEN_FOLDER_MAPPER_XML = new File(GEN_FOLDER_MAPPER_XML_PATH);
+	public static final String GEN_PACKAGE = "com.ww";
+	public static final String GEN_PACKAGE_XML = "";
 	public static final GroupTemplate group = new GroupTemplate(new File(PACKAGE_PATH));
 	
 	public static void main(String[] args) throws Exception {
+		System.out.println(ROOT_FILE_PATH);
 		group.setCharset("UTF-8");
 		Connection conn = DBUtils.getConn();
 		DatabaseMetaData dbmd = DBUtils.getDatabaseMetaData(conn);
 		String dbType = dbmd.getDatabaseProductName();
 		DBUtils.loadMetadata(dbmd);
-		for (String tableName : TableMetadata.getAllTables().keySet()) {
+		
+//		for (String tableName : TableMetadata.getAllTables().keySet()) {
+		//生成单表测试
+		List<String> tableNameList = new ArrayList<>();
+		tableNameList.add("country");
+		for (String tableName : tableNameList) {
 			generateXml(tableName, dbType);
-			generateDao(tableName, dbType);
 			generateEntity(tableName, dbType);
 			generateService(tableName, dbType);
-			generateWeb(tableName, dbType);
-			generateDatatableHtml(tableName, dbType);
-			generateDialogInfoHtml(tableName, dbType);
-			generateDialogUpdateHtml(tableName, dbType);
+			generateMapper(tableName, dbType);
+			generateServiceImpl(tableName, dbType);
+			
+			
+//			generateDao(tableName, dbType);
+//			generateWeb(tableName, dbType);
+//			generateDatatableHtml(tableName, dbType);
+//			generateDialogInfoHtml(tableName, dbType);
+//			generateDialogUpdateHtml(tableName, dbType);
 		}
 	}
 
@@ -101,13 +115,13 @@ public class Main {
 	}
 
 	private static void generateXml(String tableName, String dbType) throws Exception {
-		Template template = group.getFileTemplate(dbType + "-dao-xml.txt");
+		Template template = group.getFileTemplate(dbType + "-mapper-xml.txt");
 		if (template == null)
 			throw new RuntimeException(String.format("未支持的数据库类型【%s】", dbType));
 		TableTrans trans = TableTrans.find(tableName);
-		template.set("package", GEN_PACKAGE);
+		template.set("package", GEN_PACKAGE_XML);
 		template.set("table", trans);
-		FileUtils.write(new File(GEN_FOLDER, "/mapper/" + trans.getUpperStartClassName() + "Dao.xml"), template.getTextAsString(), "UTF-8");
+		FileUtils.write(new File(GEN_FOLDER_MAPPER_XML, "/mapper/" + trans.getUpperStartClassName() + "Mapper.xml"), template.getTextAsString(), "UTF-8");
 	}
 
 	private static void generateDao(String tableName, String dbType) throws Exception {
@@ -141,6 +155,26 @@ public class Main {
 		FileUtils.write(new File(GEN_FOLDER, "/service/" + trans.getUpperStartClassName() + "Service.java"), template.getTextAsString(), "UTF-8");
 	}
 
+	private static void generateServiceImpl(String tableName, String dbType) throws Exception {
+		Template template = group.getFileTemplate(dbType + "-serviceImpl-java.txt");
+		if (template == null)
+			throw new RuntimeException(String.format("未支持的数据库类型【%s】", dbType));
+		TableTrans trans = TableTrans.find(tableName);
+		template.set("package", GEN_PACKAGE);
+		template.set("table", trans);
+		FileUtils.write(new File(GEN_FOLDER, "/serviceImpl/" + trans.getUpperStartClassName() + "ServiceImpl.java"), template.getTextAsString(), "UTF-8");
+	}
+	
+	private static void generateMapper(String tableName, String dbType) throws Exception {
+		Template template = group.getFileTemplate(dbType + "-mapper-java.txt");
+		if (template == null)
+			throw new RuntimeException(String.format("未支持的数据库类型【%s】", dbType));
+		TableTrans trans = TableTrans.find(tableName);
+		template.set("package", GEN_PACKAGE);
+		template.set("table", trans);
+		FileUtils.write(new File(GEN_FOLDER, "/mapper/" + trans.getUpperStartClassName() + "Mapper.java"), template.getTextAsString(), "UTF-8");
+	}
+	
 	private static void generateEntity(String tableName, String dbType) throws Exception {
 		Template template = group.getFileTemplate(dbType + "-domain.txt");
 		if (template == null)

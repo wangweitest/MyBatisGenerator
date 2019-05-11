@@ -3,12 +3,10 @@ package ${package}.entity;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.io.Serializable;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.magic.common.BaseEntity;
-
-public class ${table.upperStartClassName} extends BaseEntity<Long,${table.upperStartClassName}> {
+public class ${table.upperStartClassName} implements Serializable{
 
 	private static final long serialVersionUID = 1L;
     
@@ -35,12 +33,7 @@ public class ${table.upperStartClassName} extends BaseEntity<Long,${table.upperS
 	<%}%>
     
     public ${table.upperStartClassName}(){}
-    
-    
-    public ${table.upperStartClassName}(Long id){
-    	this.id=id;
-    }
-    
+
     <% for(each in table.columns) { %>
     public ${each.javaType} get${each.upperStartFieldName}() {
         return this.${each.lowerStartFieldName};
@@ -72,9 +65,4 @@ public class ${table.upperStartClassName} extends BaseEntity<Long,${table.upperS
         this.${fromTable.lowerStartClassName }List = ${fromTable.lowerStartClassName }List;
     }
 	<%}%>
-
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
 }
