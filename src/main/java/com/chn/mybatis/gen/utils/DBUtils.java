@@ -94,16 +94,16 @@ public class DBUtils {
 			while (rs.next()) {
 				solveColumn(rs);
 			}
-			for (TableMetadata table : TableMetadata.getAllTables().values()) {
-				rs = dbmd.getPrimaryKeys(null, null, table.getTableName());
-				while (rs.next()) {
-					solvePrimaryKey(rs);
-				}
-				rs = dbmd.getImportedKeys(null, null, table.getTableName());
-				while (rs.next()) {
-					solveForeignKey(rs);
-				}
-			}
+//			for (TableMetadata table : TableMetadata.getAllTables().values()) {
+//				rs = dbmd.getPrimaryKeys(null, null, table.getTableName());
+//				while (rs.next()) {
+//					solvePrimaryKey(rs);
+//				}
+//				rs = dbmd.getImportedKeys(null, null, table.getTableName());
+//				while (rs.next()) {
+//					solveForeignKey(rs);
+//				}
+//			}
 		} catch (SQLException e) {
 			throw new RuntimeException("获取表信息出错", e);
 		}
