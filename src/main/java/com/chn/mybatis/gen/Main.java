@@ -15,13 +15,12 @@ public class Main {
 
 	private static final String EOL = System.getProperty("line.separator");
 	public static final String ROOT_FILE_PATH = Main.class.getResource("/").getPath().replace("%20", " ");//读取文件的路径
-	public static final String GEN_FILE_PATH = "/F:/workspace-new/mapper/src/main/java/com/ww/";//生成文件的路径
+	public static final String GEN_FILE_PATH = "/F:/workspace-new/tontisa-business/";//生成文件的路径
 	public static final String PACKAGE_PATH = ROOT_FILE_PATH + "com/chn/mybatis/gen/tpl";
 	public static final File GEN_FOLDER = new File(GEN_FILE_PATH);
-	public static final String GEN_FOLDER_MAPPER_XML_PATH = "/F:/workspace-new/mapper/src/main/resources/";
+	public static final String GEN_FOLDER_MAPPER_XML_PATH = "/F:/workspace-new/tontisa-business/";
 	public static final File GEN_FOLDER_MAPPER_XML = new File(GEN_FOLDER_MAPPER_XML_PATH);
-	public static final String GEN_PACKAGE = "com.ww";
-	public static final String GEN_PACKAGE_XML = "";
+	public static final String GEN_PACKAGE = "com.tontisa.business";
 	public static final GroupTemplate group = new GroupTemplate(new File(PACKAGE_PATH));
 	
 	public static void main(String[] args) throws Exception {
@@ -35,13 +34,13 @@ public class Main {
 //		for (String tableName : TableMetadata.getAllTables().keySet()) {
 		//生成单表测试
 		List<String> tableNameList = new ArrayList<>();
-		tableNameList.add("country");
+		tableNameList.add("internal_taxes");
 		for (String tableName : tableNameList) {
 			generateXml(tableName, dbType);
-			generateEntity(tableName, dbType);
-			generateService(tableName, dbType);
-			generateMapper(tableName, dbType);
-			generateServiceImpl(tableName, dbType);
+//			generateEntity(tableName, dbType);
+//			generateService(tableName, dbType);
+//			generateMapper(tableName, dbType);
+//			generateServiceImpl(tableName, dbType);
 			
 			
 //			generateDao(tableName, dbType);
@@ -115,17 +114,17 @@ public class Main {
 	}
 
 	private static void generateXml(String tableName, String dbType) throws Exception {
-		Template template = group.getFileTemplate(dbType + "-mapper-xml.txt");
+		Template template = group.getFileTemplate("mapper-xml.txt");
 		if (template == null)
 			throw new RuntimeException(String.format("未支持的数据库类型【%s】", dbType));
 		TableTrans trans = TableTrans.find(tableName);
-		template.set("package", GEN_PACKAGE_XML);
+		template.set("package", GEN_PACKAGE);
 		template.set("table", trans);
-		FileUtils.write(new File(GEN_FOLDER_MAPPER_XML, "/mapper/" + trans.getUpperStartClassName() + "Mapper.xml"), template.getTextAsString(), "UTF-8");
+		FileUtils.write(new File(GEN_FOLDER_MAPPER_XML, "tontisa-business-dao/src/main/resources/com/tontisa/business/dao/impl/mssql/" + trans.getUpperStartClassName() + "Mapper.xml"), template.getTextAsString(), "UTF-8");
 	}
 
 	private static void generateDao(String tableName, String dbType) throws Exception {
-		Template template = group.getFileTemplate(dbType + "-dao-java.txt");
+		Template template = group.getFileTemplate("dao-java.txt");
 		if (template == null)
 			throw new RuntimeException(String.format("未支持的数据库类型【%s】", dbType));
 		TableTrans trans = TableTrans.find(tableName);
@@ -135,7 +134,7 @@ public class Main {
 	}
 
 	private static void generateWeb(String tableName, String dbType) throws Exception {
-		Template template = group.getFileTemplate(dbType + "-web-java.txt");
+		Template template = group.getFileTemplate("web-java.txt");
 		if (template == null)
 			throw new RuntimeException(String.format("未支持的数据库类型【%s】", dbType));
 		TableTrans trans = TableTrans.find(tableName);
@@ -146,42 +145,42 @@ public class Main {
 	}
 
 	private static void generateService(String tableName, String dbType) throws Exception {
-		Template template = group.getFileTemplate(dbType + "-service-java.txt");
+		Template template = group.getFileTemplate("service-java.txt");
 		if (template == null)
 			throw new RuntimeException(String.format("未支持的数据库类型【%s】", dbType));
 		TableTrans trans = TableTrans.find(tableName);
 		template.set("package", GEN_PACKAGE);
 		template.set("table", trans);
-		FileUtils.write(new File(GEN_FOLDER, "/service/" + trans.getUpperStartClassName() + "Service.java"), template.getTextAsString(), "UTF-8");
+		FileUtils.write(new File(GEN_FOLDER, "tontisa-business-service/src/main/java/com/tontisa/business/service/" + trans.getUpperStartClassName() + "Service.java"), template.getTextAsString(), "UTF-8");
 	}
 
 	private static void generateServiceImpl(String tableName, String dbType) throws Exception {
-		Template template = group.getFileTemplate(dbType + "-serviceImpl-java.txt");
+		Template template = group.getFileTemplate("serviceImpl-java.txt");
 		if (template == null)
 			throw new RuntimeException(String.format("未支持的数据库类型【%s】", dbType));
 		TableTrans trans = TableTrans.find(tableName);
 		template.set("package", GEN_PACKAGE);
 		template.set("table", trans);
-		FileUtils.write(new File(GEN_FOLDER, "/serviceImpl/" + trans.getUpperStartClassName() + "ServiceImpl.java"), template.getTextAsString(), "UTF-8");
+		FileUtils.write(new File(GEN_FOLDER, "tontisa-business-service-impl/src/main/java/com/tontisa/business/service/impl/" + trans.getUpperStartClassName() + "ServiceImpl.java"), template.getTextAsString(), "UTF-8");
 	}
 	
 	private static void generateMapper(String tableName, String dbType) throws Exception {
-		Template template = group.getFileTemplate(dbType + "-mapper-java.txt");
+		Template template = group.getFileTemplate("mapper-java.txt");
 		if (template == null)
 			throw new RuntimeException(String.format("未支持的数据库类型【%s】", dbType));
 		TableTrans trans = TableTrans.find(tableName);
 		template.set("package", GEN_PACKAGE);
 		template.set("table", trans);
-		FileUtils.write(new File(GEN_FOLDER, "/mapper/" + trans.getUpperStartClassName() + "Mapper.java"), template.getTextAsString(), "UTF-8");
+		FileUtils.write(new File(GEN_FOLDER, "tontisa-business-service-impl/src/main/java/com/tontisa/business/mapper/" + trans.getUpperStartClassName() + "Mapper.java"), template.getTextAsString(), "UTF-8");
 	}
 	
 	private static void generateEntity(String tableName, String dbType) throws Exception {
-		Template template = group.getFileTemplate(dbType + "-domain.txt");
+		Template template = group.getFileTemplate("bean.txt");
 		if (template == null)
 			throw new RuntimeException(String.format("未支持的数据库类型【%s】", dbType));
 		TableTrans trans = TableTrans.find(tableName);
 		template.set("package", GEN_PACKAGE);
 		template.set("table", trans);
-		FileUtils.write(new File(GEN_FOLDER, "/entity/" + trans.getUpperStartClassName() + ".java"), template.getTextAsString());
+		FileUtils.write(new File(GEN_FOLDER, "tontisa-business-entity/src/main/java/com/tontisa/business/entity/" + trans.getUpperStartClassName() + ".java"), template.getTextAsString());
 	}
 }

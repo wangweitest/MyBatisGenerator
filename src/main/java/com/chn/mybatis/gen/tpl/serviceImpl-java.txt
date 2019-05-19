@@ -1,10 +1,10 @@
-package ${package}.serviceImpl;
+package ${package}.service.impl;
 
 import ${package}.entity.${table.upperStartClassName};
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ww.mapper.${table.upperStartClassName}Mapper;
-import com.ww.service.${table.upperStartClassName}Service;
+import ${package}.mapper.${table.upperStartClassName}Mapper;
+import ${package}.service.${table.upperStartClassName}Service;
 
 @Service
 public class ${table.upperStartClassName}ServiceImpl extends BaseServiceImpl<${table.upperStartClassName}> implements ${table.upperStartClassName}Service{

@@ -28,7 +28,11 @@ public class SqlTypeUtils {
 			return "BigDecimal";
 		case Types.CHAR:
 			return "String";
+		case Types.NCHAR:
+			return "String";
 		case Types.VARCHAR:
+			return "String";
+		case Types.NVARCHAR:
 			return "String";
 		case Types.LONGVARCHAR:
 			return "String";
@@ -50,6 +54,14 @@ public class SqlTypeUtils {
 			return "Byte[]";
 		case Types.BOOLEAN:
 			return "Boolean";
+		case microsoft.sql.Types.DATETIMEOFFSET:
+			return "Date";
+		
+		case -16://这个是xml类型
+			return "String";
+			//这个是xml类型
+		case -150://sql_variant类型
+			return "String";
 		default:
 			throw new RuntimeException(String.format("类型不匹配[%s]", type));
 		}
@@ -129,8 +141,11 @@ public class SqlTypeUtils {
 			return "NCLOB        ".trim();
 		case Types.SQLXML:
 			return "SQLXML       ".trim();
+		case -150://sql_variant类型
+			return "sql_variant".trim();
 		default:
-			throw new RuntimeException(String.format("δ֪����������[%s]", type));
+			return "NVARCHAR".trim();
+//			throw new RuntimeException(String.format("类型不匹配[%s]", type));
 		}
 	}
 

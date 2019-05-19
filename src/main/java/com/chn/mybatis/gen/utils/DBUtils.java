@@ -33,10 +33,15 @@ public class DBUtils {
 		log.info("初始化数据库【开始】");
 		Connection conn = null;
 		//Cfg cfg = ConfigUtils.getCfg(CONFIG_FILE);
-		String driver = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://139.129.129.128:3306/test";
-		String username = "dev";
-		String password = "Imwithop110.com";
+		String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+		String url = "jdbc:sqlserver://192.168.110.209:11433;DatabaseName=XQERP_DATA";
+		String username = "erp";
+		String password = "tontisa_2018";
+		
+//		String driver = "com.mysql.jdbc.Driver";
+//		String url = "jdbc:mysql://139.129.129.128:3306/test";
+//		String username = "dev";
+//		String password = "Imwithop110.com";
 		String prefixList="";
 		if(StringUtils.isNotEmpty(prefixList)){
 			String[] strings=prefixList.split(",+");
@@ -69,6 +74,7 @@ public class DBUtils {
 			dbmd = conn.getMetaData();
 			rs = dbmd.getTypeInfo();
 			while (rs.next()) {
+				log.info(rs.getString(1) + "============" +rs.getInt(2));
 				log.info(String.format("类型名称【%s】 JavaType【%s】最大精度【%s】", rs.getString(1), SqlTypeUtils.decodeToJavaType(rs.getInt(2)), rs.getString(3)));
 			}
 			String dbType = dbmd.getDatabaseProductName();
@@ -137,7 +143,7 @@ public class DBUtils {
 		table.setTableSchema(rs.getString("TABLE_SCHEM".trim()));
 		table.setTableType(rs.getString("TABLE_TYPE ".trim()));
 		table.setRemarks(rs.getString("REMARKS    ".trim()));
-		log.debug(String.format("  发现表【%s】", table.getTableName()));
+		log.info(String.format("  发现表【%s】", table.getTableName()));
 	}
 
 	private static void solveColumn(ResultSet rs) throws SQLException {
@@ -158,13 +164,13 @@ public class DBUtils {
 		column.setCharOctetLength(rs.getInt("CHAR_OCTET_LENGTH ".trim()));
 		column.setOrdinalPosition(rs.getInt("ORDINAL_POSITION  ".trim()));
 		column.setIsNullable(rs.getString("IS_NULLABLE       ".trim()));
-		column.setScopeCatalog(rs.getString("SCOPE_CATALOG     ".trim()));
-		column.setScopeSchema(rs.getString("SCOPE_SCHEMA      ".trim()));
-		column.setScopeTable(rs.getString("SCOPE_TABLE       ".trim()));
-		column.setSourceDataType(rs.getShort("SOURCE_DATA_TYPE  ".trim()));
+//		column.setScopeCatalog(rs.getString("SCOPE_CATALOG     ".trim()));//sqlserver报错
+//		column.setScopeSchema(rs.getString("SCOPE_SCHEMA      ".trim()));
+//		column.setScopeTable(rs.getString("SCOPE_TABLE       ".trim()));
+//		column.setSourceDataType(rs.getShort("SOURCE_DATA_TYPE  ".trim()));
 		column.setIsAutoincrement(rs.getString("IS_AUTOINCREMENT  ".trim()));
 		TableMetadata targetTable = TableMetadata.find(column.getTableName());
 		targetTable.addColumn(column);
-		log.debug(String.format("  表【%s】发现列【%s】，列类型为【%s】", column.getTableName(), column.getColumnName(), column.getTypeName()));
+		log.info(String.format("  表【%s】发现列【%s】，列类型为【%s】", column.getTableName(), column.getColumnName(), column.getTypeName()));
 	}
 }
