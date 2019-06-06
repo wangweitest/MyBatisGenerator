@@ -1,8 +1,8 @@
 package ${package}.mapper;
 
 import ${package}.entity.${table.upperStartClassName};
-import tk.mybatis.mapper.common.Mapper;
+import ${package}.BatisMapper.BatiesBaseMapper;
 
-public interface ${table.upperStartClassName}Mapper extends Mapper<${table.upperStartClassName}> {
+public interface ${table.upperStartClassName}Mapper extends BatiesBaseMapper<${table.upperStartClassName}> {
     
 }
