@@ -74,7 +74,7 @@ public class DBUtils {
 			dbmd = conn.getMetaData();
 			rs = dbmd.getTypeInfo();
 			while (rs.next()) {
-				log.info(rs.getString(1) + "============" +rs.getInt(2));
+//				log.info(rs.getString(1) + "============" +rs.getInt(2));
 				log.info(String.format("类型名称【%s】 JavaType【%s】最大精度【%s】", rs.getString(1), SqlTypeUtils.decodeToJavaType(rs.getInt(2)), rs.getString(3)));
 			}
 			String dbType = dbmd.getDatabaseProductName();
@@ -115,27 +115,27 @@ public class DBUtils {
 		}
 	}
 
-	private static void solveForeignKey(ResultSet rs) throws SQLException {
-		String targetTableName = rs.getString("PKTABLE_NAME");
-		String targetColumnName = rs.getString("PKCOLUMN_NAME");
-		String tableName = rs.getString("FKTABLE_NAME");
-		String columnName = rs.getString("FKCOLUMN_NAME");
-		ColumnMetadata fromColumn = TableMetadata.find(tableName).getColumn(columnName);
-		ColumnMetadata toColumn = TableMetadata.find(targetTableName).getColumn(targetColumnName);
-		LinkMetadata link = new LinkMetadata(fromColumn, toColumn);
-		TableMetadata.find(fromColumn.getTableName()).addLink(link);
-		TableMetadata.find(toColumn.getTableName()).addLinkBy(link);
-		log.info(String.format("  表【%s】中的列【%s】引用表【%s】的列【%s】", tableName, columnName, targetTableName, targetColumnName));
-	}
-
-	private static void solvePrimaryKey(ResultSet rs) throws SQLException {
-		String tableName = rs.getString("TABLE_NAME");
-		String columnName = rs.getString("COLUMN_NAME");
-		TableMetadata tableMetadata = TableMetadata.find(tableName);
-		ColumnMetadata keyColumn = tableMetadata.getColumns().remove(columnName);
-		tableMetadata.getKeys().put(columnName, PKColumnMetadata.from(keyColumn));
-		log.debug(String.format("  表【%s】中的【%s】列标记为主键", tableName, columnName));
-	}
+//	private static void solveForeignKey(ResultSet rs) throws SQLException {
+//		String targetTableName = rs.getString("PKTABLE_NAME");
+//		String targetColumnName = rs.getString("PKCOLUMN_NAME");
+//		String tableName = rs.getString("FKTABLE_NAME");
+//		String columnName = rs.getString("FKCOLUMN_NAME");
+//		ColumnMetadata fromColumn = TableMetadata.find(tableName).getColumn(columnName);
+//		ColumnMetadata toColumn = TableMetadata.find(targetTableName).getColumn(targetColumnName);
+//		LinkMetadata link = new LinkMetadata(fromColumn, toColumn);
+//		TableMetadata.find(fromColumn.getTableName()).addLink(link);
+//		TableMetadata.find(toColumn.getTableName()).addLinkBy(link);
+//		log.info(String.format("  表【%s】中的列【%s】引用表【%s】的列【%s】", tableName, columnName, targetTableName, targetColumnName));
+//	}
+//
+//	private static void solvePrimaryKey(ResultSet rs) throws SQLException {
+//		String tableName = rs.getString("TABLE_NAME");
+//		String columnName = rs.getString("COLUMN_NAME");
+//		TableMetadata tableMetadata = TableMetadata.find(tableName);
+//		ColumnMetadata keyColumn = tableMetadata.getColumns().remove(columnName);
+//		tableMetadata.getKeys().put(columnName, PKColumnMetadata.from(keyColumn));
+//		log.debug(String.format("  表【%s】中的【%s】列标记为主键", tableName, columnName));
+//	}
 
 	private static void solveTable(ResultSet rs) throws SQLException {
 		TableMetadata table = TableMetadata.find(rs.getString("TABLE_NAME ".trim()));
@@ -171,6 +171,6 @@ public class DBUtils {
 		column.setIsAutoincrement(rs.getString("IS_AUTOINCREMENT  ".trim()));
 		TableMetadata targetTable = TableMetadata.find(column.getTableName());
 		targetTable.addColumn(column);
-		log.info(String.format("  表【%s】发现列【%s】，列类型为【%s】", column.getTableName(), column.getColumnName(), column.getTypeName()));
+		log.info(String.format("  表【%s】发现列【%s】，列类型为【%s】，备注为【%s】", column.getTableName(), column.getColumnName(), column.getTypeName(), column.getRemarks()));
 	}
 }

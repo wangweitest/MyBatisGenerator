@@ -34,16 +34,16 @@ public class Main {
 //		for (String tableName : TableMetadata.getAllTables().keySet()) {
 		//生成单表测试
 		List<String> tableNameList = new ArrayList<>();
-		tableNameList.add("internal_taxes");
+		tableNameList.add("Line_Plan_Cost_QianZheng");
 		for (String tableName : tableNameList) {
-			generateXml(tableName, dbType);
-//			generateEntity(tableName, dbType);
+//			generateXml(tableName, dbType);
+			generateEntity(tableName, dbType);
 //			generateService(tableName, dbType);
 //			generateMapper(tableName, dbType);
 //			generateServiceImpl(tableName, dbType);
-			
-			
 //			generateDao(tableName, dbType);
+			
+			
 //			generateWeb(tableName, dbType);
 //			generateDatatableHtml(tableName, dbType);
 //			generateDialogInfoHtml(tableName, dbType);
@@ -181,6 +181,7 @@ public class Main {
 		TableTrans trans = TableTrans.find(tableName);
 		template.set("package", GEN_PACKAGE);
 		template.set("table", trans);
+		System.out.println(template.getTextAsString());
 		FileUtils.write(new File(GEN_FOLDER, "tontisa-business-entity/src/main/java/com/tontisa/business/entity/" + trans.getUpperStartClassName() + ".java"), template.getTextAsString());
 	}
 }
